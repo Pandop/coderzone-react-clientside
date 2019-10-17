@@ -1,0 +1,37 @@
+{
+	"extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
+	"linterOptions": {
+		"exclude": [
+			"config/**/*.js",
+			"node_modules/**/*.ts",
+			"coverage/lcov-report/*.js",
+			"src/Util/registerServiceWorker.ts"
+		]
+	},
+	"rules": {
+		"no-console": false,
+		"max-classes-per-file": false,
+		"no-empty": false,
+		"no-string-literal": false,
+		"object-literal-sort-keys": false,
+		"ordered-imports": false,
+		"semicolon": true,
+		"trailing-comma": {
+			"options": {
+				"multiline": "always"
+			}
+		},
+		"indent": {
+			"options": "tabs"
+		},
+		"no-namespace": false,
+		"variable-name": false,
+		"prefer-const": {
+			"severity": "warning"
+		},
+		"jsx-self-close" : {
+			"severity": "warning"
+		},
+		"callable-types": false
+	}
+}

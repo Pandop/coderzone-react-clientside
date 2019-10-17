@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {requestBody, ServerResponse, Programmer} from '../App';
+import {ServerResponse} from '../App';
 import API from '../api/utils/API';
 
 const axiosGetServerData = async (query={})=> {
