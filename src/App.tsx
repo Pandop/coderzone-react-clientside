@@ -1,6 +1,7 @@
-import React, {useState,useEffect} from 'react';
-import {BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import './App.css';
+import React, {useState,useEffect,useContext} from 'react';
+import {BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import {observer} from 'mobx-react';
 import axios, { AxiosResponse } from 'axios';
 import API from "./api/utils/API";
 
@@ -8,6 +9,7 @@ import HomePage from './components/pages/HomePage';
 import CoderProfilePage from './components/pages/CoderProfilePage';
 import NotFoundPage from './components/pages/NofFound';
 import { axiosPostServerData } from './services/RequestHelpers';
+import CodersStore from './store/codersStore';
 
 export interface ICoderItem {
 	id: number;
@@ -74,26 +76,23 @@ interface Profile{
 }
 
 const App: React.FunctionComponent = () => {
+	const store = useContext(CodersStore);
+	//const {loadProgrammers} = store;
+
 	const [programmers, setData] = useState<Array<Programmer>>([]);
 
 	useEffect(()=>{
-		 getGraphQlServerResult(requestBody.query);	
-	}, []);
+		// getGraphQlServerResult(requestBody.query);	
+		 store.loadProgrammers(requestBody.query);
+	}, [CodersStore]);
 
-	const getGraphQlServerResult = (query={})=>
-	{
-		axiosPostServerData<ServerResponse>(query)
-			.then(res=> { setData(res.data.programmers)})
-			.catch((error)=> { console.error(`Something went wrong:${error}`); });
-	}
-
-	console.log("Data: ", programmers);
+	console.log("store.programmers: ", store.programmers);
 	return (
 	<Router>
 		<nav className="navbar navbar-expand-lg App-header"><Link to="/" className="navbar-brand nav-links">Coders zone</Link> </nav>
 		<Switch>
-			<Route exact path="/" render={(routerProps)=> <HomePage {...routerProps} programmers={programmers} />} />
-			<Route path="/coder/:id"  render={(routerProps)=> <CoderProfilePage {...routerProps} />} />
+			<Route exact path="/" component= {HomePage} />
+			<Route path="/coder/:id" component= {CoderProfilePage} />
 			<Route render={()=><NotFoundPage /> } />
 		</Switch>		
 		<footer className="App-footer">&copy;2019</footer>
@@ -102,39 +101,4 @@ const App: React.FunctionComponent = () => {
 }
 
 // Exporting app
-export default App;
-
-
-// const postQuery=()=> axios({
-// 	url: 'https://localhost:44367/graphql',
-// 	method: 'post',
-// 	data: {
-// 	  query: requestBody.query
-// 	}
-//   }).then((result) => {
-// 	console.log(result.data)
-//   }).catch(er=> console.log("Something went wrong: ", er));
-// const GetUsersQuery =() => {
-// 	API.post('/graphql', {
-// 			query: requestBody.query
-// 		})
-// 		.then(result=> setData(result.data))
-// 		.catch(er=> console.log("Something went wrong: ", er));
-//   }
-
-//   const axiosReq = async ()=> {
-// 	  try {
-// 		const result = await axios.post<ServerResponse>('/graphql',{
-// 			//url: 'https://localhost:44367/graphql',
-// 			query: requestBody.query
-// 			//method: 'post',
-// 			//data: {  query: requestBody.query },
-// 		});
-// 		const data = result.data;
-// 		console.log("Server data=>", data);
-// 		return data;
-// 	  } catch (error) {
-// 		console.error(`Something went wrong:${error}`);
-// 	  }
-
-// };
+export default observer(App);

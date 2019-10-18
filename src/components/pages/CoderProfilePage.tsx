@@ -1,7 +1,10 @@
-import React,{useState,useEffect} from 'react'
-import { ICoderItem, Programmer, ServerResponse} from '../../App';
+import React,{useState,useEffect, useContext} from 'react'
+import { observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
+
+import { ICoderItem, Programmer, ServerResponse} from '../../App';
 import { axiosPostServerData, getFullName } from '../../services/RequestHelpers';
+import CodersStore from '../../store/codersStore';
 
 interface ICoderProps{
 	coder: ICoderItem;
@@ -55,20 +58,17 @@ const requestBody = {
 
 const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({match}) => {
 	const {id} =match.params as IRouteParams;
-	const [programmer, setData] = useState<Programmer>();
+	const {loadingInitial,programmer, loadProgrammer} = useContext(CodersStore);
+
+	//const [programmer, setData] = useState<Programmer>();
 
 	useEffect(()=>{
-		getGraphQlServerResult(requestBody.query, {uuid: id});	
+		//getGraphQlServerResult(requestBody.query, {uuid: id});	
+		loadProgrammer(requestBody.query, {uuid: id});
 	}, []);
 
-	const getGraphQlServerResult = (query={}, varaibles={})=>
-	{
-		axiosPostServerData<IProgrammer>(query,varaibles)
-			.then(res=> { setData(res.data.programmer)})
-			.catch((error)=> { console.error(`Something went wrong:${error}`); });
-	}
-	//
-	if(programmer===undefined) return null;
+	if(programmer == undefined|| loadingInitial) 
+		return <div className="container-fluid"><h3>Loading ....</h3></div>;
 
 	const{ profile:{avatar, firstName, lastName, bio}} = programmer;
 	return (
@@ -98,4 +98,4 @@ const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({match})
 }
 
 // Export home page component
-export default CoderProfilePage
+export default observer(CoderProfilePage);

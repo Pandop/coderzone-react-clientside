@@ -1,30 +1,29 @@
-import React from 'react'
-import { ICoderItem, ServerResponse, Programmer} from '../../App'
-import Card  from '../features/Card'
-import { RouteComponentProps } from 'react-router'
+import React, { useContext } from 'react';
+import { observer } from 'mobx-react';
+import { RouteComponentProps } from 'react-router';
 
-interface ICoderProps extends RouteComponentProps{
-	coders: ICoderItem[];
-}
-interface IProgrammer extends RouteComponentProps{
-	programmers: Array<Programmer>
+import { ICoderItem, ServerResponse, Programmer} from '../../App';
+import Card  from '../features/Card';
+import CodersStore from '../../store/codersStore';
 
-}
 
-const HomePage: React.FunctionComponent<IProgrammer> = ({programmers, ...restProps}) => {
+// programmers={coderStore.programmers}
+const HomePage: React.FunctionComponent<RouteComponentProps> = ({...restProps}) => {
+	const {loadingInitial,programmers} = useContext(CodersStore);
+
 	console.log("Data===>", programmers);
 	console.log("Array.isArra===>", Array.isArray(programmers));
-	if(programmers.length==0) return null;
+	if(programmers.length==0 || loadingInitial) 
+		return <div className="container-fluid"><h3>Loading ....</h3></div>;
 
 	return (
 		<div className="container-fluid">
 			<section className="d-flex flex-row justify-content-center flex-wrap my-1">
-				{ programmers.map((coder)=> <Card key={coder.id} coder={coder} {...restProps} />) }
+				{ programmers.map((coder:Programmer)=> <Card key={coder.id} coder={coder} {...restProps} />) }
 			</section>
 		</div>
-		
 	)
 }
 
 // Export home page component
-export default HomePage
+export default observer(HomePage);
