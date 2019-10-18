@@ -7,7 +7,22 @@ import { AxiosResponse } from 'axios';
 export interface IProgrammer{
 	data: {programmers: Array<Programmer>}
 }
+
+
+export interface IGroupResult {
+	name: string;
+	hasBackendAccess: boolean;
+}
+export interface IUserResult {
+	id: string;
+	email: string;
+	groups: IGroupResult[];
+}
+
 class Store{
+	@observable
+	private user?: IUserResult;
+
 	@observable 
 	public programmers: Array<Programmer>=[];
 
@@ -15,6 +30,10 @@ class Store{
 
 	@observable 
 	public loadingInitial: boolean = false;
+
+	public routerHistory: History;
+
+	//public apolloClient: ApolloClient<{}>;
 
 	// Actions
 	@action 
@@ -35,6 +54,51 @@ class Store{
 	}
 
 	// Computed sections
+	@computed
+	public get loggedIn() {
+		return this.user !== undefined; 
+	}
+
+	@computed
+	public get userId(): string | undefined {
+		return this.user ? this.user.id : undefined;
+	};
+
+	@computed
+	public get email(): string | undefined {
+		return this.user ? this.user.email : undefined;
+	}
+	
+	@computed
+	public get userGroups(): IGroupResult[] {
+		if (this.user) {
+			return [...this.user.groups];
+		}
+		return [];
+	};
+
+	@computed
+	public get hasBackendAccess() {
+		if (this.user) {
+			return this.user.groups.some(ug => ug.hasBackendAccess);
+		}
+		return false;
+	};
+
+	@action
+	public setLoggedInUser(userResult: IUserResult) {
+		this.user = userResult;
+	}
+	
+	@action clearLoggedInUser() {
+		this.user = undefined;
+	}
+
+	@computed
+	public get getFullName():string{
+		//TODO:
+		return "this.programmer"
+	}
  }
 
 // Create an instance of store

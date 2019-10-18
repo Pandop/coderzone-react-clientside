@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
 
-import { ICoderItem, ServerResponse, Programmer} from '../../App';
+import { Programmer} from '../../App';
 import Card  from '../features/Card';
 import CodersStore from '../../store/codersStore';
 
