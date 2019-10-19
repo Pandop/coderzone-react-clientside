@@ -14,9 +14,9 @@ const Card: React.FC<ICardProps> = ({ coder, location }) => {
             </div>
             <div className="card-body card-content-trans" >
                 <div className="card-content" >
-                    <h3 className="card-title">{`${coder.profile.firstName} ${coder.profile.lastName}`}</h3>
+                    <h4 className="card-title">{`${coder.profile.firstName} ${coder.profile.lastName}`}</h4>
                     <h6 className="card-subtitle mb-2 text-muted">Senior Developer</h6>
-                    <p className="card-text" >{coder.profile.bio.substring(0, 80)}</p>
+                    <p className="card-text" >{coder.profile.bio.substring(0, 80)}...</p>
                     <Link to="#" className="card-link">Reach out</Link>
                     <Link to={`coder/${coder.id}`} className="card-link">View profile</Link>
                 </div>
