@@ -1,3 +1,6 @@
+import { query } from './../App';
+import { graphql } from 'react-apollo';
+import { ApolloClient } from 'apollo-boost';
 import { createContext } from 'react';
 import { History } from 'history';
 import { action, observable, computed } from 'mobx';
@@ -33,7 +36,7 @@ class Store {
 
     public routerHistory: History;
 
-    //public apolloClient: ApolloClient<{}>;
+    public apolloClient: ApolloClient<{}>;
 
     // Actions
     @action
@@ -53,6 +56,7 @@ class Store {
             .finally(() => { this.loadingInitial = false; });
     }
 
+    @action getProgrammers = () => graphql(query);
     // Computed sections
     @computed
     public get loggedIn() {

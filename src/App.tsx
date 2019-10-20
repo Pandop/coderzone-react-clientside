@@ -2,6 +2,8 @@ import './App.css';
 import React, { useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { observer } from 'mobx-react';
+import { gql, ApolloError } from "apollo-boost";
+import { graphql, Query } from "react-apollo";
 
 import HomePage from './components/pages/HomePage';
 import CoderProfilePage from './components/pages/CoderProfilePage';
@@ -18,6 +20,7 @@ export interface ICoderItem {
     skills: [];
     techStack: Array<string>;
 }
+
 
 // NavLink -> <li><NavLink to="/auth">Authenticate</NavLink></li> No relaod with NavLink
 
@@ -64,8 +67,37 @@ interface Profile {
     bio: string
 }
 
+interface IProgrammersProps {
+    data: { programmers: Array<Programmer> };
+    error?: ApolloError;
+    loading: boolean;
+}
+
+export const query = gql` 
+	query prog
+	{
+		programmers
+		{
+			id
+			userName
+			email
+			profile	{
+				id
+				avatar	
+				firstName
+				lastName
+				bio
+			}
+		}
+	}`;
+
+
 const App: React.FunctionComponent = () => {
     const store = useContext(CodersStore);
+    //const myTest = graphql(query);
+    //console.log("My Test", myTest);
+
+
     //const {loadProgrammers} = store;
 
     // const [programmers, setData] = useState<Array<Programmer>>([]);
@@ -85,6 +117,15 @@ const App: React.FunctionComponent = () => {
                 <Route render={() => <NotFoundPage />} />
             </Switch>
             <footer className="App-footer">&copy;2019</footer>
+
+            <Query query={query}>
+                {({ loading, error, data }: IProgrammersProps) => {
+                    if (loading) return <div>Loading...</div>;
+                    if (error) return <div>Error :(</div>;
+                    console.log("My Test::::::::::::::::::::::::;;", data.programmers);
+                    return (<p>Hi there</p>)
+                }}
+            </Query>
         </Router>
     );
 }
