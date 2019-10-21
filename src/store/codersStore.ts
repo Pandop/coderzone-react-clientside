@@ -1,11 +1,13 @@
-import { query } from './../App';
+//import { query } from './../App';
 import { graphql } from 'react-apollo';
-import { ApolloClient } from 'apollo-boost';
+//import { ApolloClient } from 'apollo-boost';
+import { default as ApolloClient } from 'apollo-boost';
 import { createContext } from 'react';
 import { History } from 'history';
 import { action, observable, computed } from 'mobx';
 import { Programmer, ServerResponse } from '../App';
 import { axiosPostServerData } from '../services/RequestHelpers';
+import { query } from '../components/pages/HomePage';
 
 export interface IProgrammer {
 	data: { programmers: Array<Programmer> }
@@ -106,7 +108,7 @@ class Store {
 }
 
 // Create an instance of store
-const store = new Store();
+export const store = new Store();
 
 // create context of store out store instance and export
-export default createContext(store);
+//export default createContext(store);
