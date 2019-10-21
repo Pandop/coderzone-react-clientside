@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { RouteComponentProps } from 'react-router';
 
 import { ICoderItem, Programmer, ServerResponse} from '../../App';
-import { axiosPostServerData, getFullName } from '../../services/RequestHelpers';
+import { getFullName } from '../../services/RequestHelpers';
 import CodersStore from '../../store/codersStore';
 
 interface ICoderProps{
