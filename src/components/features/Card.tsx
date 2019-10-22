@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Programmer } from '../../App';
+import { store } from '../../store/codersStore';
 
 //interface ICardProps extends RouteComponentProps{ coder: ICoderItem;}
-interface ICardProps extends RouteComponentProps { coder: Programmer; }
+export interface ICardProps  { coder: Programmer; }
 
-const Card: React.FC<ICardProps> = ({ coder, location }) => {
-	console.log("locations", location);
+const Card: React.FC<ICardProps> = ({ coder }) => {
+	//const location = store.routerHistory.location;
+	//console.log("locations::::::::::::::::::", location);
 	return (
 		<section className="card m-1 card-transition" style={{ width: "16rem" }}>
 			<div className="card-image-trans">
