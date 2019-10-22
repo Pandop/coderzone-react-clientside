@@ -104,25 +104,10 @@ query pgm($uuid: ID!)
 
 const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match }) => {
 	const { id } = match.params as IRouteParams;
-	//const store = useContext(CodersStore);
-	//const { loadingInitial, programmer, loadProgrammer } = store;
-
-	//const [programmer, setData] = useState<Programmer>();
-	// const programmer=undefined;
-	// const loadingInitial=true;
-	// useEffect(() => {
-	// 	//getGraphQlServerResult(requestBody.query, {uuid: id});	
-	// 	loadProgrammer(requestBody.query, { uuid: id });
-	// }, [loadProgrammer, id]);
-
-	// if (programmer === undefined || loadingInitial)
-	// 	return <Spinner />;
-
-	//const { profile: { avatar, firstName, lastName, bio } } = programmer;
 	return (
-		<div className="container card-transition" style={{ overflowY: "hidden" }}>
-			<section className="d-flex flex-row justify-content-center">
-				<div className="card my-3" style={{ maxWidth: "100vh", minHeight: "82vh", overflowY: "hidden" }}>
+		<div className="" style={{ overflowY: "hidden", minHeight: "83vh" }}>
+			<section className="d-flex flex-row justify-content-center card-transition">
+				<div className="card m-5" style={{ minWidth: "55vh", overflowY: "hidden" }}>
 					<div className="row no-gutters">
 						<Query 
 							query={query} 
@@ -131,12 +116,10 @@ const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match 
 							notifyOnNetworkStatusChange={true}
 						>
 							{({ loading, error, data }: IServerResponseProps) => {
-								console.log(":Data", data);
 
-								if (loading) 
-									return <Spinner />;
-								if (error) 
-									return <div className="alert alert-danger">Error :(</div>;
+								if (loading) return <Spinner />;
+
+								if (error) 	return <div className="alert alert-danger">Error :(</div>;
 
 								const { profile: { avatar, firstName, lastName, bio } } = data.programmer;
 								return (
@@ -150,7 +133,6 @@ const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match 
 												<h6 className="card-subtitle mb-2 text-muted">Senior Developer</h6>
 												<p className="card-text">{bio}.</p>
 												<h6 className="card-subtitle mb-2 text-muted">Skills</h6>
-												<div></div>
 												<p className="card-text"><small className="text-muted">Last updated 3 mins ago</small></p>
 											</div>
 										</div>
@@ -158,7 +140,6 @@ const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match 
 								)
 							}}
 						</Query>
-						
 					</div>
 				</div>
 			</section>

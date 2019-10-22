@@ -6,7 +6,7 @@ import { Route, Router, Switch } from 'react-router';
 import { Link } from "react-router-dom";
 import { observer, Provider } from 'mobx-react';
 //import { Provider } from "mobx-react";
-import {  default as ApolloClient,ApolloError, Operation } from "apollo-boost";
+import { default as  ApolloClient,ApolloError, Operation, ApolloLink,HttpLink, InMemoryCache, NormalizedCacheObject, } from "apollo-boost";
 
 import HomePage from './components/pages/HomePage';
 import CoderProfilePage from './components/pages/CoderProfilePage';
@@ -14,7 +14,7 @@ import NotFoundPage from './components/pages/NofFound';
 //import CodersStore from './store/codersStore';
 import {store} from './store/codersStore';
 import { createBrowserHistory } from 'history';
-import { ErrorResponse } from 'apollo-link-error';
+import { ErrorResponse, onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import { ServerError, ServerParseError } from 'apollo-link-http-common';
 import { runInAction, action } from 'mobx';
@@ -81,28 +81,78 @@ interface IProgrammersProps {
 	error?: ApolloError;
 	loading: boolean;
 }
-
+// interface IAuthLink extends Operation, ApolloLink{
+// 	concat(): string;
+// 	split(): string;
+// 	request(): Promise<void>|void
+// }
 
 @observer
 class App extends Component{
 	constructor(props:any, context:any){
 		super(props,context);
-		//const store =useContext(codersStore);
+
+		// const httpLink = new HttpLink({uri: 'https://localhost:44367/graphql'});
+
 		store.routerHistory = createBrowserHistory();
+
+		// store.apolloClient = new ApolloClient({
+		// 	link: ApolloLink.from([httpLink, this.onAuthLinkRequest as any, this.errorLink]),
+		// 	cache: new InMemoryCache(),
+		// });
+		
 		store.apolloClient = new ApolloClient({
 			uri: 'https://localhost:44367/graphql',
 			request: this.onApolloRequest,
 			onError: this.onApolloError,
-		});		
+			cache: new InMemoryCache(),
+		});	
+
 	}
 
 	private onApolloRequest = async (operation: Operation) => {
 		operation.setContext({
 			headers: {
 				'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN'),
+				//Authorization: `bearer ${sessionStorage.getItem("token")}`
 			},
 		});
 	}
+
+	//@action
+	private onAuthLinkRequest=(operation:Operation) => {
+		operation.setContext(({headers, ...rest}:Record<string, ApolloLink>)=>({
+			...rest,
+			headers: {
+				...headers,
+				Authorization: `bearer ${sessionStorage.getItem("token")}`,
+				//authorization: token ? `Bearer ${localStorage.getItem('token')}` : ''
+				}
+		})
+	)}
+
+	@action
+	private authLink = (operation: Operation)=>	
+		operation.setContext({
+			headers: {
+				Authorization: `bearer ${sessionStorage.getItem("token")}`
+			}
+	});
+
+	//@action
+	private errorLink = onError(({graphQLErrors, networkError, operation})=>{
+		if(graphQLErrors){
+			graphQLErrors.forEach(({message, path})=> console.error(`[GraphQL Error] Message: ${message}, Path: ${path}`))
+		}
+		if(networkError){
+			 console.error(`[Network Error] Message: ${networkError.message}, Operation: ${operation.operationName}`);
+			 if (this.isServerError(networkError) && networkError.statusCode === 401) {
+				store.clearLoggedInUser();
+				store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
+			}
+		}
+	})
+
 	@action
 	private onApolloError = (error: ErrorResponse) => {
 		if (this.isServerError(error.networkError) && error.networkError.statusCode === 401) {

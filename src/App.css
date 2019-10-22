@@ -61,7 +61,7 @@ img{
 */
 .card-transition{
 	opacity: 0;
-	box-shadow: 0 .25rem .25rem rgba(0,0,0,0.2);
+	/*box-shadow: 0 .25rem .25rem rgba(0,0,0,0.12);*/
 	overflow: hidden;
 	animation: ImageFadeIn .8s .5s forwards;
 }
