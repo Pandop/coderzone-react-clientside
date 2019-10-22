@@ -1,12 +1,14 @@
 import React, { useEffect, useContext } from 'react'
 import { observer } from 'mobx-react';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps, Redirect } from 'react-router';
 
 import { getFullName } from '../../services/RequestHelpers';
 import Spinner from '../features/loadSpinner';
 import { ApolloError, gql } from 'apollo-boost';
 import { Programmer } from '../../App';
 import { Query } from 'react-apollo';
+import Auth from '../authentication/Auth';
+import { store } from '../../store/codersStore';
 //import CodersStore from '../../store/codersStore';
 
 type GUID = string;
@@ -102,11 +104,19 @@ query pgm($uuid: ID!)
 		}
 	}`;
 
-const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match }) => {
-	const { id } = match.params as IRouteParams;
+const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = (props) => {
+	const { id } = props.match.params as IRouteParams;
+	// const adminSwitch = () => {
+	// 	if (!store.userGroups.some(ug => ug.hasBackendAccess)) {
+	// 		return <Redirect to="/404" />;
+	// 	}
+	// 	return <div>Hello</div>
+	// }
+	
 	return (
 		<div className="" style={{ overflowY: "hidden", minHeight: "83vh" }}>
 			<section className="d-flex flex-row justify-content-center card-transition">
+			
 				<div className="card m-5" style={{ minWidth: "55vh", overflowY: "hidden" }}>
 					<div className="row no-gutters">
 						<Query 
@@ -144,7 +154,6 @@ const CoderProfilePage: React.FunctionComponent<RouteComponentProps> = ({ match 
 				</div>
 			</section>
 		</div>
-
 	)
 }
 
