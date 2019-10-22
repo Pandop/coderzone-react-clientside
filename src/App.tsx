@@ -181,11 +181,11 @@ class App extends Component{
 			<ApolloProvider client={store.apolloClient}>
 				<Provider store={store}>
 					<Router history={store.routerHistory}>
-							<>
-								{/* <ToastContainer className="frontend" /> */}
-								<nav className="navbar navbar-expand-lg App-header"><Link to="/" className="navbar-brand nav-links">Coders zone</Link> </nav>
-							</>
-						
+						<>
+							{/* <ToastContainer className="frontend" /> */}
+							<nav className="navbar navbar-expand-lg App-header"><Link to="/" className="navbar-brand nav-links">Coders zone</Link> </nav>
+						</>
+					
 						<Switch>
 							<Route exact path="/" component={HomePage} />
 							<Route path="/coder/:id" component={CoderProfilePage} />

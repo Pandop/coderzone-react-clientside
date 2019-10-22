@@ -8,7 +8,6 @@ import { Programmer } from '../../App';
 import Card from '../features/Card';
 //import CodersStore from '../../store/codersStore';
 import Spinner from '../../components/features/loadSpinner';
-import { dataFromBackend } from '../../services/graphQLHelpers';
 
 interface IServerResponseProps {
 	data: { programmers: Array<Programmer> };
@@ -37,7 +36,7 @@ export const query = gql`
 // programmers={coderStore.programmers}
 const HomePage: React.FunctionComponent<RouteComponentProps> = ({ ...restProps }) => {
 	return (
-		<div className="container-fluid container-width" style={{ minWidth: "100vh", minHeight: "83vh", overflowY: "hidden" }}>
+		<div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
 			<Query 
 				query={query}
 				fetchPolicy="network-only"
