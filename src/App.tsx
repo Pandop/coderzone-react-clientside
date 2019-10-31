@@ -19,18 +19,6 @@ import { ApolloProvider } from 'react-apollo';
 import { ServerError, ServerParseError } from 'apollo-link-http-common';
 import { action } from 'mobx';
 
-export interface ICoderItem {
-	id: number;
-	firstName: string;
-	lastName: string;
-	avatar: string;
-	description: string;
-	address: [];
-	skills: [];
-	techStack: Array<string>;
-}
-
-
 // NavLink -> <li><NavLink to="/auth">Authenticate</NavLink></li> No relaod with NavLink
 // auth -> component = Auth -> Redirect from="/" to="/auth" exact > <Route path="/auth" component={Auth}>
 
