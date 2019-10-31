@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from 'react-apollo';
@@ -7,16 +7,19 @@ import { ApolloProvider } from 'react-apollo';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+//import codersStore from './store/codersStore';
 
-const client = new ApolloClient({
-    uri: 'https://localhost:44367/graphql',
-});
+// const store =useContext(codersStore);
+
+// store.apolloClient = new ApolloClient({
+// 	uri: 'https://localhost:44367/graphql',
+// });
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
-        <App />
-    </ApolloProvider>,
-    document.getElementById('root')
+	//<ApolloProvider client={store.apolloClient}>
+		<App />,
+	//</ApolloProvider>,
+	document.getElementById('root')
 );
 
 
