@@ -1,26 +1,31 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react';
+import { gql } from "apollo-boost";
 import { RouteComponentProps } from 'react-router';
 
-import { Programmer } from '../../App';
-import Card from '../features/Card';
-import CodersStore from '../../store/codersStore';
+import { QueryWrapper } from '../QueryWrapper';
+import renderProgrammersCollections from '../collections/renderProgrammersCollections';
 
+export const query = gql` 
+	query prog
+	{
+		programmers
+		{
+			id
+			userName
+			email
+			profile	{id avatar firstName lastName bio }
+		}
+	}`;
 
 // programmers={coderStore.programmers}
 const HomePage: React.FunctionComponent<RouteComponentProps> = ({ ...restProps }) => {
-	const { loadingInitial, programmers } = useContext(CodersStore);
-
-	console.log("Data===>", programmers);
-	console.log("Array.isArra===>", Array.isArray(programmers));
-	if (programmers.length === 0 || loadingInitial)
-		return <div className="container-fluid"><h3>Loading ....</h3></div>;
-
+	const constructVariables = () => ({});
 	return (
-		<div className="container-fluid">
-			<section className="d-flex flex-row justify-content-center flex-wrap my-1">
-				{programmers.map((coder: Programmer) => <Card key={coder.id} coder={coder} {...restProps} />)}
-			</section>
+		<div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
+			<QueryWrapper query={query} constructVariables={constructVariables} fetchPolicy="network-only">
+				{renderProgrammersCollections}
+			</QueryWrapper>
 		</div>
 	)
 }
