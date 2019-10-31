@@ -1,12 +1,12 @@
 import './App.css';
 import Cookies from 'js-cookie';
-import React, { useEffect, useContext, Component } from 'react';
+import React, { Component } from 'react';
 //import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { Route, Router, Switch } from 'react-router';
 import { Link } from "react-router-dom";
 import { observer, Provider } from 'mobx-react';
 //import { Provider } from "mobx-react";
-import { default as ApolloClient, ApolloError, Operation, ApolloLink, HttpLink, InMemoryCache, NormalizedCacheObject, } from "apollo-boost";
+import { default as ApolloClient, ApolloError, Operation, ApolloLink, InMemoryCache, } from "apollo-boost";
 
 import HomePage from './components/pages/HomePage';
 import CoderProfilePage from './components/pages/CoderProfilePage';
@@ -14,10 +14,10 @@ import NotFoundPage from './components/pages/NofFound';
 //import CodersStore from './store/codersStore';
 import { store } from './store/codersStore';
 import { createBrowserHistory } from 'history';
-import { ErrorResponse, onError } from 'apollo-link-error';
+import { ErrorResponse } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import { ServerError, ServerParseError } from 'apollo-link-http-common';
-import { runInAction, action } from 'mobx';
+import { action } from 'mobx';
 
 export interface ICoderItem {
 	id: number;
@@ -92,14 +92,7 @@ class App extends Component {
 	constructor(props: any, context: any) {
 		super(props, context);
 
-		// const httpLink = new HttpLink({uri: 'https://localhost:44367/graphql'});
-
 		store.routerHistory = createBrowserHistory();
-
-		// store.apolloClient = new ApolloClient({
-		// 	link: ApolloLink.from([httpLink, this.onAuthLinkRequest as any, this.errorLink]),
-		// 	cache: new InMemoryCache(),
-		// });
 
 		store.apolloClient = new ApolloClient({
 			uri: 'https://localhost:44367/graphql',
@@ -128,8 +121,7 @@ class App extends Component {
 				Authorization: `bearer ${sessionStorage.getItem("token")}`,
 				//authorization: token ? `Bearer ${localStorage.getItem('token')}` : ''
 			}
-		})
-		)
+		}));
 	}
 
 	@action
@@ -140,37 +132,16 @@ class App extends Component {
 			}
 		});
 
-	//@action
-	private errorLink = onError(({ graphQLErrors, networkError, operation }) => {
-		if (graphQLErrors) {
-			graphQLErrors.forEach(({ message, path }) => console.error(`[GraphQL Error] Message: ${message}, Path: ${path}`))
-		}
-		if (networkError) {
-			console.error(`[Network Error] Message: ${networkError.message}, Operation: ${operation.operationName}`);
-			if (this.isServerError(networkError) && networkError.statusCode === 401) {
-				store.clearLoggedInUser();
-				store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
-			}
-		}
-	})
-
 	@action
 	private onApolloError = (error: ErrorResponse) => {
 		if (this.isServerError(error.networkError) && error.networkError.statusCode === 401) {
 			store.clearLoggedInUser();
 			store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
-
-			// runInAction(() => {
-			// 	store.clearLoggedInUser();
-			// 	store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
-			// });
 		}
 	}
+
 	private isServerError(error: Error | ServerError | ServerParseError | undefined): error is ServerError | ServerParseError {
-		if (error === undefined) {
-			return false;
-		}
-		if (error['statusCode'] === undefined) {
+		if (error === undefined || error['statusCode'] === undefined) {
 			return false;
 		}
 		return true;
@@ -186,7 +157,6 @@ class App extends Component {
 							{/* <ToastContainer className="frontend" /> */}
 							<nav className="navbar navbar-expand-lg App-header"><Link to="/" className="navbar-brand nav-links">Coders zone</Link> </nav>
 						</>
-
 						<Switch>
 							<Route exact path="/" component={HomePage} />
 							<Route path="/coder/:id" component={CoderProfilePage} />
@@ -199,28 +169,6 @@ class App extends Component {
 		);
 	}
 }
-// const App: React.FunctionComponent = () => {
-// 	const store = useContext(CodersStore);
-
-// 	useEffect(() => {
-// 		// getGraphQlServerResult(requestBody.query);
-// 		store.loadProgrammers(requestBody.query);
-// 	}, [store]);
-
-// 	console.log("store.programmers: ", store.programmers);
-// 	return (
-// 		<Router>
-// 			<nav className="navbar navbar-expand-lg App-header"><Link to="/" className="navbar-brand nav-links">Coders zone</Link> </nav>
-// 			<Switch>
-// 				<Route exact path="/" component={HomePage} />
-// 				<Route path="/coder/:id" component={CoderProfilePage} />
-// 				<Route render={() => <NotFoundPage />} />
-// 			</Switch>
-// 			<footer className="App-footer">&copy;2019</footer>
-// 		</Router>
-// 	);
-// }
 
 // Exporting app
 export default App;
-//export default observer(App);

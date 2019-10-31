@@ -1,12 +1,9 @@
 //import { query } from './../App';
 import { graphql } from 'react-apollo';
-//import { ApolloClient } from 'apollo-boost';
 import { default as ApolloClient } from 'apollo-boost';
-import { createContext } from 'react';
 import { History } from 'history';
 import { action, observable, computed } from 'mobx';
-import { Programmer, ServerResponse } from '../App';
-import { axiosPostServerData } from '../services/RequestHelpers';
+import { Programmer } from '../App';
 import { query } from '../components/pages/HomePage';
 
 export interface IProgrammer {
@@ -41,24 +38,8 @@ class Store {
 	public apolloClient: ApolloClient<{}>;
 
 	// Actions
-	@action
-	public loadProgrammers = (query = {}) => {
-		this.loadingInitial = true;
-		axiosPostServerData<ServerResponse>(query)
-			.then((results) => { this.programmers = results.data.programmers; })
-			.catch((error: object) => { console.error(`Something went wrong:${error}`); })
-			.finally(() => { this.loadingInitial = false; });
-	}
-
-	@action loadProgrammer = (query = {}, varaibles = {}) => {
-		this.loadingInitial = true;
-		axiosPostServerData<{ data: { programmer: Programmer } }>(query, varaibles)
-			.then((results) => { this.programmer = results.data.programmer; })
-			.catch((error: object) => { console.error(`Something went wrong:${error}`); })
-			.finally(() => { this.loadingInitial = false; });
-	}
-
 	@action getProgrammers = () => graphql(query);
+
 	// Computed sections
 	@computed
 	public get loggedIn() {
