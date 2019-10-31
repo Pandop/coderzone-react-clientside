@@ -20,14 +20,14 @@ export const query = gql`
 
 // programmers={coderStore.programmers}
 const HomePage: React.FunctionComponent<RouteComponentProps> = ({ ...restProps }) => {
-	const constructVariables = () => ({});
-	return (
-		<div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
-			<QueryWrapper query={query} constructVariables={constructVariables} fetchPolicy="network-only">
-				{renderProgrammersCollections}
-			</QueryWrapper>
-		</div>
-	)
+    const constructVariables = () => ({});
+    return (
+        <div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
+            <QueryWrapper query={query} constructVariables={constructVariables} fetchPolicy="network-only">
+                {renderProgrammersCollections}
+            </QueryWrapper>
+        </div>
+    )
 }
 
 // Export home page component

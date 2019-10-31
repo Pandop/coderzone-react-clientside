@@ -26,19 +26,47 @@ class Store {
 	private user?: IUserResult;
 
 	@observable
+<<<<<<< HEAD
 	public programmers: Array<IProgrammerModel> = [];
 
 	@observable programmer: IProgrammerModel | undefined
+=======
+	public programmers: Array<Programmer> = [];
+
+	@observable programmer: Programmer | undefined
+>>>>>>> 0a1c25713912a605f06d76059369b502ed56477c
 
 	@observable
 	public loadingInitial: boolean = false;
 
 	public routerHistory: History;
 
+<<<<<<< HEAD
 	public apolloClient: ApolloClient<{}>;
 
 	// Actions
 	@action getProgrammers = () => graphql(query);
+=======
+	//public apolloClient: ApolloClient<{}>;
+
+	// Actions
+	@action
+	public loadProgrammers = (query = {}) => {
+		this.loadingInitial = true;
+		axiosPostServerData<ServerResponse>(query)
+			.then((results) => { this.programmers = results.data.programmers; })
+			.catch((error: object) => { console.error(`Something went wrong:${error}`); })
+			.finally(() => { this.loadingInitial = false; });
+	}
+
+	@action loadProgrammer = (query = {}, varaibles = {}) => {
+		this.loadingInitial = true;
+		axiosPostServerData<{ data: { programmer: Programmer } }>(query, varaibles)
+			.then((results) => { this.programmer = results.data.programmer; })
+			.catch((error: object) => { console.error(`Something went wrong:${error}`); })
+			.finally(() => { this.loadingInitial = false; });
+	}
+>>>>>>> 0a1c25713912a605f06d76059369b502ed56477c
 
 	// Computed sections
 	@computed

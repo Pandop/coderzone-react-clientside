@@ -1,6 +1,6 @@
 
 //import { IModelAttributes, Model } from 'Models/Model';
-import {store} from '../store/codersStore';
+import { store } from '../store/codersStore';
 import { IAcl } from '../security/IAcl';
 
 
