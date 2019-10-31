@@ -1,18 +1,10 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { gql, ApolloError } from "apollo-boost";
+import { gql} from "apollo-boost";
 import { RouteComponentProps } from 'react-router';
 
-import { Programmer } from '../../App';
 import { QueryWrapper } from '../QueryWrapper';
 import renderProgrammersCollections from '../collections/renderProgrammersCollections';
-
-
-interface IServerResponseProps {
-    data: { programmers: Array<Programmer> };
-    error?: ApolloError;
-    loading: boolean;
-}
 
 export const query = gql` 
 	query prog
@@ -28,14 +20,14 @@ export const query = gql`
 
 // programmers={coderStore.programmers}
 const HomePage: React.FunctionComponent<RouteComponentProps> = ({ ...restProps }) => {
-    const constructVariables = () => ({});
-    return (
-        <div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
-            <QueryWrapper query={query} constructVariables={constructVariables} fetchPolicy="network-only">
-                {renderProgrammersCollections}
-            </QueryWrapper>
-        </div>
-    )
+	const constructVariables = () => ({});
+	return (
+		<div className="container-fluid container-width" style={{ minWidth: "10vh", minHeight: "83vh", overflowY: "hidden" }}>
+			<QueryWrapper query={query} constructVariables={constructVariables} fetchPolicy="network-only">
+				{renderProgrammersCollections}
+			</QueryWrapper>
+		</div>
+	)
 }
 
 // interface IProgrammersCollectionProps extends RouteComponentProps {
