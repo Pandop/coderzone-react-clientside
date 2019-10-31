@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { gql} from "apollo-boost";
+import { gql } from "apollo-boost";
 import { RouteComponentProps } from 'react-router';
 
 import { QueryWrapper } from '../QueryWrapper';
@@ -29,13 +29,6 @@ const HomePage: React.FunctionComponent<RouteComponentProps> = ({ ...restProps }
 		</div>
 	)
 }
-
-// interface IProgrammersCollectionProps extends RouteComponentProps {
-// 	programmers: Array<Programmer>
-
-// }
-
-
 
 // Export home page component
 export default observer(HomePage);

@@ -3,11 +3,11 @@ import { graphql } from 'react-apollo';
 import { default as ApolloClient } from 'apollo-boost';
 import { History } from 'history';
 import { action, observable, computed } from 'mobx';
-import { Programmer } from '../App';
+import { IProgrammer } from '../App';
 import { query } from '../components/pages/HomePage';
 
-export interface IProgrammer {
-	data: { programmers: Array<Programmer> }
+export interface IProgrammerModel {
+	data: { programmers: Array<IProgrammer> }
 }
 
 
@@ -26,9 +26,9 @@ class Store {
 	private user?: IUserResult;
 
 	@observable
-	public programmers: Array<Programmer> = [];
+	public programmers: Array<IProgrammerModel> = [];
 
-	@observable programmer: Programmer | undefined
+	@observable programmer: IProgrammerModel | undefined
 
 	@observable
 	public loadingInitial: boolean = false;

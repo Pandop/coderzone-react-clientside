@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Programmer } from '../../App';
+import { IProgrammer } from '../../App';
 
 //interface ICardProps extends RouteComponentProps{ coder: ICoderItem;}
-export interface ICardProps { coder: Programmer; }
+export interface ICardProps { coder: IProgrammer; }
 
 const Card: React.FC<ICardProps> = ({ coder }) => {
     return (

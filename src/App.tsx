@@ -6,7 +6,7 @@ import { Route, Router, Switch } from 'react-router';
 import { Link } from "react-router-dom";
 import { observer, Provider } from 'mobx-react';
 //import { Provider } from "mobx-react";
-import { default as ApolloClient, ApolloError, Operation, ApolloLink, InMemoryCache, } from "apollo-boost";
+import { default as ApolloClient, Operation, InMemoryCache, } from "apollo-boost";
 
 import HomePage from './components/pages/HomePage';
 import CoderProfilePage from './components/pages/CoderProfilePage';
@@ -32,43 +32,15 @@ export interface ICoderItem {
 
 
 // NavLink -> <li><NavLink to="/auth">Authenticate</NavLink></li> No relaod with NavLink
-
 // auth -> component = Auth -> Redirect from="/" to="/auth" exact > <Route path="/auth" component={Auth}>
 
-type CoderList = Array<ICoderItem>;
-
-//https://localhost:44367/graphql/
-export const requestBody = {
-	query: `
-	query prog
-	{
-		programmers
-		{
-			id
-			userName
-			email
-			profile	{
-				id
-				avatar
-				firstName
-				lastName
-				bio
-			}
-		}
-	}`
-};
-
 type GUID = string & { isGuid: true };
+
 export interface ServerResponse {
-	data: { programmers: Array<Programmer> }
+	data: { programmers: Array<IProgrammer> }
 }
-export interface Programmer {
-	id: GUID;
-	userName: string;
-	email: string;
-	profile: Profile
-}
-interface Profile {
+
+interface IProfile {
 	id: GUID;
 	avatar: string
 	firstName: string
@@ -76,16 +48,13 @@ interface Profile {
 	bio: string
 }
 
-interface IProgrammersProps {
-	data: { programmers: Array<Programmer> };
-	error?: ApolloError;
-	loading: boolean;
+export interface IProgrammer {
+	id: GUID;
+	userName: string;
+	email: string;
+	profile: IProfile
 }
-// interface IAuthLink extends Operation, ApolloLink{
-// 	concat(): string;
-// 	split(): string;
-// 	request(): Promise<void>|void
-// }
+
 
 @observer
 class App extends Component {
@@ -101,50 +70,6 @@ class App extends Component {
 			cache: new InMemoryCache(),
 		});
 
-	}
-
-	private onApolloRequest = async (operation: Operation) => {
-		operation.setContext({
-			headers: {
-				'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN'),
-				//Authorization: `bearer ${sessionStorage.getItem("token")}`
-			},
-		});
-	}
-
-	//@action
-	private onAuthLinkRequest = (operation: Operation) => {
-		operation.setContext(({ headers, ...rest }: Record<string, ApolloLink>) => ({
-			...rest,
-			headers: {
-				...headers,
-				Authorization: `bearer ${sessionStorage.getItem("token")}`,
-				//authorization: token ? `Bearer ${localStorage.getItem('token')}` : ''
-			}
-		}));
-	}
-
-	@action
-	private authLink = (operation: Operation) =>
-		operation.setContext({
-			headers: {
-				Authorization: `bearer ${sessionStorage.getItem("token")}`
-			}
-		});
-
-	@action
-	private onApolloError = (error: ErrorResponse) => {
-		if (this.isServerError(error.networkError) && error.networkError.statusCode === 401) {
-			store.clearLoggedInUser();
-			store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
-		}
-	}
-
-	private isServerError(error: Error | ServerError | ServerParseError | undefined): error is ServerError | ServerParseError {
-		if (error === undefined || error['statusCode'] === undefined) {
-			return false;
-		}
-		return true;
 	}
 
 	public render() {
@@ -167,6 +92,30 @@ class App extends Component {
 				</Provider>
 			</ApolloProvider>
 		);
+	}
+
+	private onApolloRequest = async (operation: Operation) => {
+		operation.setContext({
+			headers: {
+				'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN'),
+				//Authorization: `bearer ${sessionStorage.getItem("token")}`
+			},
+		});
+	}
+
+	@action
+	private onApolloError = (error: ErrorResponse) => {
+		if (this.isServerError(error.networkError) && error.networkError.statusCode === 401) {
+			store.clearLoggedInUser();
+			store.routerHistory.push(`/login?redirect=${store.routerHistory.location.pathname}`);
+		}
+	}
+
+	private isServerError(error: Error | ServerError | ServerParseError | undefined): error is ServerError | ServerParseError {
+		if (error === undefined || error['statusCode'] === undefined) {
+			return false;
+		}
+		return true;
 	}
 }
 
